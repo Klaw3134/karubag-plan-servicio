@@ -3,6 +3,8 @@ package cl.karubag.plan.service;
 import cl.karubag.plan.dto.PlanDTO;
 import cl.karubag.plan.model.Plan;
 import cl.karubag.plan.repository.PlanRepository;
+import cl.karubag.plan.exception.ResourceNotFoundException;
+import cl.karubag.plan.exception.DuplicateResourceException;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,13 +34,13 @@ public class PlanService {
 
     public PlanDTO obtenerPorId(Long id) {
         Plan plan = planRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Plan no encontrado con id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Plan no encontrado con id: " + id));
         return toDTO(plan);
     }
 
     public PlanDTO crear(PlanDTO dto) {
         if (planRepository.existsByNombre(dto.getNombre())) {
-            throw new RuntimeException("Ya existe un plan con el nombre: " + dto.getNombre());
+            throw new DuplicateResourceException("Ya existe un plan con el nombre: " + dto.getNombre());
         }
         Plan plan = toEntity(dto);
         return toDTO(planRepository.save(plan));
@@ -46,7 +48,7 @@ public class PlanService {
 
     public PlanDTO actualizar(Long id, PlanDTO dto) {
         Plan plan = planRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Plan no encontrado con id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Plan no encontrado con id: " + id));
         plan.setNombre(dto.getNombre());
         plan.setDescripcion(dto.getDescripcion());
         plan.setPrecioMensual(dto.getPrecioMensual());
