@@ -5,11 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
-/**
- * Endpoint de health check para verificar que el microservicio está arriba.
- *
- * GET /health → { "status": "UP", "service": "plan-servicio" }
- */
+
 @RestController
 public class HealthController {
 
